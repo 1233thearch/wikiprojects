@@ -1,5 +1,7 @@
-# wikiprojects
-Storing some contributions to the wikipedia projects. (offline)
+# Wikipedia Projects Backup Storage
+##Stores for backup use or for files that does not have a compatible license with Commons
+
+Storing some contributions to the wikipedia projects.
 
 // This is a place where Contributions to wikipedia (apart from edits of Wikipedia) of the owner of the GIT repository was placed in
 
