@@ -1,4 +1,3 @@
-﻿(function($, mw) {
 // Create portlet link
 var portletLinkOnline = mw.util.addPortletLink(
     'p-personal',
@@ -103,7 +102,7 @@ var portletLinkOnline = mw.util.addPortletLink(
                     var userlink = function(user) {
                         var user2 = user.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&lt;');
                         return '<br><a href="/wiki/User:' + user2 + '" target="_blank">' + user2 + '</a>&nbsp;<small style="opacity:.75;">(<a href="/wiki/User talk:' + user2 + '" target="_blank">留言</a>)</small>　';
-                    }
+                    };
                     
                     if (admins.length + rollbackers.length + patrollers.length > 0) {
                         var adminsstring = ['<p>當前在線管理人員</p>'];
@@ -134,7 +133,7 @@ var portletLinkOnline = mw.util.addPortletLink(
 
                         mw.notify($(adminsstring.join('')));
                     } else {
-                        mw.notify('現在沒有管理人員在線，可以去搞破壞了！');
+                        mw.notify('現在沒有管理人員在線');
                     }
                 }).fail(function () {
                     mw.notify('查詢時出現錯誤');
@@ -142,4 +141,3 @@ var portletLinkOnline = mw.util.addPortletLink(
             });
         });
     });
-})(jQuery, mw);
