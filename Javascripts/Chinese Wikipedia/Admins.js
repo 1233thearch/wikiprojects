@@ -1,4 +1,8 @@
-// Create portlet link
+// About this program:
+// This program was done with implementation of codes, and combined codes of both Alexander Misel and Vjudge1
+// Program was used for Chinese Wikipedia only. For English Wikipedia, please check in the English Box
+// Version: 1.2
+// Create Portlet Link
 var portletLinkOnline = mw.util.addPortletLink(
     'p-personal',
     '#',
@@ -23,13 +27,13 @@ var portletLinkOnline = mw.util.addPortletLink(
         rollbackers = [];
         patrollers = [];
 
-        // 最近更改30分钟内的编辑用户
+        // Recent Changes Detector
         time = new Date();
         rcstart = time.toISOString();
-        time.setMinutes(time.getMinutes() - 30);
-        rcend = time.toISOString();
+        time.setMinutes(time.getMinutes() - 15);
+        rcend = time.toISOSring();
 
-        //API:RecentChanges
+        //API:RecentChanges, Remove Bots and others
         api.get({
             format: 'json',
             action: 'query',
@@ -58,7 +62,7 @@ var portletLinkOnline = mw.util.addPortletLink(
 
                 Array.prototype.push.apply(users, usersExt);
 
-                // 使用者名稱去重與分割
+                // Remove non-unique Usernames
                 users = $.unique(users.sort());
 
                 var promises = [];
@@ -88,9 +92,9 @@ var portletLinkOnline = mw.util.addPortletLink(
                     }).done(mark));
                 }
 
-                // 查询用户权限
+                // Check User Group
                 $.when.apply($, promises).done(function () {
-                    // 消除空值
+                    // Remove Users without User Group
                     var filter = function(n) {
                         return n;
                     };
