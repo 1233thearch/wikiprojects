@@ -1,2 +1,2 @@
-# Wikipedia Projects Backup Storage
-Stores MULTIPLE uses.
+# Javascripts
+Stores Javascripts for users use.
