@@ -1,14 +1,11 @@
-﻿// About this program:
-// This program was done with implementation of codes, and combined codes of both Alexander Misel and Vjudge1
-// Program was used for English Wikipedia only. For Chinese Wikipedia, please check in the Chinese Box
-// Version: 1.2
-// Create Portlet Link
+// Only For English Project Only.
+// Create portlet link
 var portletLinkOnline = mw.util.addPortletLink(
     'p-personal',
     '#',
-    'Seek Help',
-    't-onlinehelp',
-    'Seek Help from Administrators, Rollbackers and Reviewers',
+    'Online users with advanced rights',
+    't-onlineadmin',
+    'Seek help from these users.      Note: The action query tends to be quite long when the number of recent edits was high. This is a currrently unsolved problem.',
     '',
     '#pt-userpage'
 );
@@ -27,13 +24,13 @@ var portletLinkOnline = mw.util.addPortletLink(
         rollbackers = [];
         patrollers = [];
 
-        // Recent Changes Detector
+        // 最近更改30分钟内的编辑用户
         time = new Date();
         rcstart = time.toISOString();
         time.setMinutes(time.getMinutes() - 15);
-        rcend = time.toISOSring();
+        rcend = time.toISOString();
 
-        //API:RecentChanges, Remove Bots and others
+        //API:RecentChanges
         api.get({
             format: 'json',
             action: 'query',
@@ -62,7 +59,7 @@ var portletLinkOnline = mw.util.addPortletLink(
 
                 Array.prototype.push.apply(users, usersExt);
 
-                // Remove non-unique Usernames
+                // 使用者名稱去重與分割
                 users = $.unique(users.sort());
 
                 var promises = [];
@@ -79,9 +76,6 @@ var portletLinkOnline = mw.util.addPortletLink(
                             if ($.inArray('patroller', user.groups) > -1) {
                                 patrollers[i] = user.name;
                             }
-                            if ($.inArray('reviewer', user.groups) > -1) {
-                                reviewers[i] = user.name;
-                            }
                         }
                     });
                 };
@@ -95,9 +89,9 @@ var portletLinkOnline = mw.util.addPortletLink(
                     }).done(mark));
                 }
 
-                // Check User Group
+                // 查询用户权限
                 $.when.apply($, promises).done(function () {
-                    // Remove Users without User Group
+                    // 消除空值
                     var filter = function(n) {
                         return n;
                     };
@@ -105,18 +99,17 @@ var portletLinkOnline = mw.util.addPortletLink(
                     admins = admins.filter(filter);
                     rollbackers = rollbackers.filter(filter);
                     patrollers = patrollers.filter(filter);
-                    reviewers = reviewers.filter(filter);
 
                     var userlink = function(user) {
                         var user2 = user.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&lt;');
-                        return '<br><a href="/wiki/User:' + user2 + '" target="_blank">' + user2 + '</a>&nbsp;<small style="opacity:.75;">(<a href="/wiki/User talk:' + user2 + '" target="_blank">留言</a>)</small>　';
+                        return '<br><a href="/wiki/User:' + user2 + '" target="_blank">' + user2 + '</a>&nbsp;<small style="opacity:.75;">(<a href="/wiki/User talk:' + user2 + '" target="_blank">Talk</a>)</small>　';
                     };
                     
-                    if (admins.length + rollbackers.length + patrollers.length + reviewers.length > 0) {
-                        var adminsstring = ['<p>Helpers Online</p>'];
+                    if (admins.length + rollbackers.length + patrollers.length > 0) {
+                        var adminsstring = ['<center><p><b>Current online users with advanced rights</b></p></center>'];
 
                         if (admins.length > 0) {
-                            adminsstring.push('<p style="word-break:break-all;">There are currently ' + admins.length + 'Administrators Online: ');
+                            adminsstring.push('<p style="word-break:break-all;">There are currently ' + admins.length + ' administrators <br> online:');
                             $.each(admins, function(i, e) {
                                 adminsstring.push(userlink(e));
                             });
@@ -124,7 +117,7 @@ var portletLinkOnline = mw.util.addPortletLink(
                         }
 
                         if (patrollers.length > 0) {
-                            adminsstring.push('<p style="word-break:break-all;">There are currently' + patrollers.length + 'Patrollers Online：');
+                            adminsstring.push('<p style="word-break:break-all;">There are currently ' + patrollers.length + ' patrollers <br>online:');
                             $.each(patrollers, function(i, e) {
                                 adminsstring.push(userlink(e));
                             });
@@ -132,16 +125,8 @@ var portletLinkOnline = mw.util.addPortletLink(
                         }
 
                         if (rollbackers.length > 0) {
-                            adminsstring.push('<p style="word-break:break-all;">There are currently' + rollbackers.length + 'Rollbackers Online：');
+                            adminsstring.push('<p style="word-break:break-all;">There are currently ' + rollbackers.length + ' rollbackers <br>online');
                             $.each(rollbackers, function(i, e) {
-                                adminsstring.push(userlink(e));
-                            });
-                            adminsstring.push('</p>');
-                        }
-
-                        if (reviewers.length > 0) {
-                            adminsstring.push('<p style="word-break:break-all;">There are currently' + reviewers.length + 'Pending Changes Reviewers Online：');
-                            $.each(reviewers, function(i, e) {
                                 adminsstring.push(userlink(e));
                             });
                             adminsstring.push('</p>');
@@ -149,10 +134,10 @@ var portletLinkOnline = mw.util.addPortletLink(
 
                         mw.notify($(adminsstring.join('')));
                     } else {
-                        mw.notify('There are currently no Admins, Rollbacker, Reviewer and Rollbackers online');
+                        mw.notify('Sorry! You cannot find help currently as there are no users online');
                     }
                 }).fail(function () {
-                    mw.notify('Error at Query');
+                    mw.notify('Error 404 - Connection not found');
                 });
             });
         });
